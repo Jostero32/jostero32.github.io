@@ -1,0 +1,59 @@
+---
+// Íconos de trazo fino del diseño (24×24).
+interface Props {
+  nombre: 'equipo' | 'birrete' | 'insignia' | 'check' | 'foco' | 'flecha' | 'atras';
+  size?: number;
+  color?: string;
+  grosor?: number;
+}
+const { nombre, size = 22, color = 'currentColor', grosor = 1.6 } = Astro.props;
+---
+
+<svg
+  aria-hidden="true"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke={color}
+  stroke-width={grosor}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  {
+    nombre === 'equipo' && (
+      <>
+        <circle cx="9" cy="8" r="3.2" />
+        <circle cx="16.5" cy="9" r="2.5" />
+        <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5M15 14.5c3 0 5 1.8 5 4.5" />
+      </>
+    )
+  }
+  {
+    nombre === 'birrete' && (
+      <>
+        <path d="M2 9l10-5 10 5-10 5z" />
+        <path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" />
+      </>
+    )
+  }
+  {
+    nombre === 'insignia' && (
+      <>
+        <circle cx="12" cy="9" r="5" />
+        <path d="M9 13.5L8 21l4-2 4 2-1-7.5" />
+      </>
+    )
+  }
+  {nombre === 'check' && <path d="M6 12.5l4 4 8-9" />}
+  {
+    nombre === 'foco' && (
+      <>
+        <path d="M9 18h6M10 21h4" />
+        <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" />
+      </>
+    )
+  }
+  {nombre === 'flecha' && <path d="M4 12h15M14 7l5 5-5 5" />}
+  {nombre === 'atras' && <path d="M15 6l-6 6 6 6" />}
+</svg>

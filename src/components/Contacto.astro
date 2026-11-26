@@ -1,0 +1,122 @@
+---
+import { tr, rutaCv, type Lang } from '../lib/i18n';
+import { persona, ui } from '../data/perfil';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const x = (t: Parameters<typeof tr>[0]) => tr(t, lang);
+const c = ui.contacto;
+const medios = [
+  [c.correo, persona.correo, `mailto:${persona.correo}`],
+  ['LinkedIn', persona.linkedinCorto, persona.linkedin],
+  ['GitHub', persona.githubCorto, persona.github],
+  [c.cv, c.pdf, rutaCv(lang)],
+] as const;
+const mensajes = {
+  nombre: x(c.errorNombre),
+  correo: x(c.errorCorreo),
+  mensaje: x(c.errorMensaje),
+  enviado: x(c.enviado),
+  abierto: x(c.abierto),
+  error: x(c.errorEnvio),
+};
+const campo = 'rounded-[10px] border border-borde-boton bg-ceniza-claro px-3.5 py-3 text-lg font-normal text-tinta outline-none placeholder:text-gris-suave focus:border-mortino aria-[invalid=true]:border-[#B3261E]';
+---
+
+<section id="contacto" class="bg-mortino-profundo py-[72px] text-[#F3EEF5]">
+  <div class="contenedor flex flex-wrap items-start gap-12">
+    <div class="min-w-0 flex-[1_1_360px]">
+      <h2 class="m-0 text-[clamp(40px,5vw,52px)] leading-[1.05] font-medium tracking-[-0.03em]">{x(c.titulo)}</h2>
+      <p class="mt-3.5 mb-0 max-w-[24em] text-xl text-mortino-texto">{x(c.bajada)}</p>
+      <div class="mt-7 flex flex-col gap-2.5">
+        {
+          medios.map(([k, v, url]) => (
+            <a href={url} class="flex justify-between gap-3 rounded-xl border border-mortino-borde px-[18px] py-3.5 text-lg no-underline transition-colors hover:bg-white/5">
+              <span class="font-medium">{x(k)}</span>
+              <span class="min-w-0 truncate text-base text-mortino-texto">{x(v)}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <form id="formulario" novalidate data-endpoint={persona.formulario ?? ''} data-correo={persona.correo} data-mensajes={JSON.stringify(mensajes)} class="min-w-0 flex-[1_1_480px] rounded-3xl bg-blanco p-8 text-tinta max-sm:p-5">
+      <h3 class="mt-0 mb-5 text-[26px] font-medium">{x(c.formTitulo)}</h3>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+        <label class="flex flex-col gap-1.5 text-base font-medium">
+          {x(c.nombre)}
+          <input name="nombre" type="text" autocomplete="name" placeholder={x(c.nombreEj)} class={campo} />
+          <span data-error="nombre" class="text-sm font-normal text-[#B3261E]" aria-live="polite"></span>
+        </label>
+        <label class="flex flex-col gap-1.5 text-base font-medium">
+          {x(c.correo)}
+          <input name="correo" type="email" autocomplete="email" placeholder={x(c.correoEj)} class={campo} />
+          <span data-error="correo" class="text-sm font-normal text-[#B3261E]" aria-live="polite"></span>
+        </label>
+      </div>
+      <label class="mt-4 flex flex-col gap-1.5 text-base font-medium">
+        {x(c.mensaje)}
+        <textarea name="mensaje" rows="5" placeholder={x(c.mensajeEj)} class={`${campo} resize-y`}></textarea>
+        <span data-error="mensaje" class="text-sm font-normal text-[#B3261E]" aria-live="polite"></span>
+      </label>
+      <button type="submit" class="mt-5 w-full cursor-pointer rounded-[10px] border-0 bg-mortino-profundo px-4 py-3.5 text-lg font-medium text-white transition hover:bg-mortino disabled:opacity-60">
+        {x(c.enviar)}
+      </button>
+      <p data-estado class="mt-3 mb-0 min-h-6 text-center text-base text-mortino" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#formulario');
+  if (form) {
+    const m = JSON.parse(form.dataset.mensajes ?? '{}');
+    const estado = form.querySelector<HTMLElement>('[data-estado]')!;
+    const correoValido = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const datos = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      const errores: Record<string, string> = {};
+      if (!datos.nombre?.trim()) errores.nombre = m.nombre;
+      if (!correoValido(datos.correo?.trim() ?? '')) errores.correo = m.correo;
+      if (!datos.mensaje?.trim()) errores.mensaje = m.mensaje;
+
+      for (const campo of ['nombre', 'correo', 'mensaje']) {
+        const el = form.elements.namedItem(campo) as HTMLInputElement;
+        el.setAttribute('aria-invalid', String(Boolean(errores[campo])));
+        form.querySelector(`[data-error="${campo}"]`)!.textContent = errores[campo] ?? '';
+      }
+      const primero = Object.keys(errores)[0];
+      if (primero) {
+        (form.elements.namedItem(primero) as HTMLElement).focus();
+        estado.textContent = '';
+        return;
+      }
+
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        // Sin servicio de formularios: se abre el correo con el mensaje listo.
+        const asunto = encodeURIComponent(`Portafolio: mensaje de ${datos.nombre}`);
+        const cuerpo = encodeURIComponent(`${datos.mensaje}\n\n${datos.nombre} · ${datos.correo}`);
+        window.location.href = `mailto:${form.dataset.correo}?subject=${asunto}&body=${cuerpo}`;
+        estado.textContent = m.abierto;
+        return;
+      }
+      const boton = form.querySelector('button')!;
+      boton.disabled = true;
+      try {
+        const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(datos) });
+        if (!r.ok) throw new Error(String(r.status));
+        form.reset();
+        estado.textContent = m.enviado;
+      } catch {
+        estado.textContent = m.error;
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  }
+</script>

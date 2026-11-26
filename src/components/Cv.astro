@@ -1,0 +1,225 @@
+---
+import { tr, type Lang } from '../lib/i18n';
+import { persona, ui } from '../data/perfil';
+import { proyectos } from '../data/proyectos';
+import { equipo, experiencia, formacion, tecnologias, certificaciones } from '../data/secciones';
+
+// Hoja A4 sobria: blanco y negro con acento mortiño. Se exporta a PDF con scripts/cv-pdf.mjs.
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const x = (t: Parameters<typeof tr>[0]) => tr(t, lang);
+const es = lang === 'es';
+const sitio = es ? 'jostero32.github.io' : 'jostero32.github.io/en';
+const anio = (iso: string) => iso.slice(0, 4);
+---
+
+<main class="hoja">
+  <header>
+    <div>
+      <h1>Kevin Carrasco</h1>
+      <p class="rol">{es ? 'Desarrollador full stack' : 'Full stack developer'} · {x(persona.ciudad)}</p>
+    </div>
+    <ul class="contacto">
+      <li><a href={`mailto:${persona.correo}`}>{persona.correo}</a></li>
+      <li><a href={persona.linkedin}>linkedin.com/in/{persona.linkedin.split('/in/')[1]}</a></li>
+      <li><a href={persona.github}>github.com/{persona.githubCorto}</a></li>
+      <li><a href={`https://${sitio}`}>{sitio}</a></li>
+    </ul>
+  </header>
+
+  <section>
+    <h2>{es ? 'Perfil' : 'Profile'}</h2>
+    <p>
+      {
+        es
+          ? 'Desarrollador full stack: construyo la API, la base de datos, la interfaz y el despliegue con Docker Compose. Documento y pruebo cada proyecto. También programo firmware para ESP32 y Arduino.'
+          : 'Full stack developer: I build the API, the database, the interface and the Docker Compose deployment. I document and test every project. I also write firmware for ESP32 and Arduino.'
+      }
+    </p>
+  </section>
+
+  <section>
+    <h2>{x(ui.experiencia.titulo)}</h2>
+    <div class="fila">
+      <strong>{x(experiencia.cargo)}</strong> · {x(experiencia.lugar)}
+      {experiencia.periodo && <span class="fecha">{x(experiencia.periodo)}</span>}
+    </div>
+    <ul>{experiencia.logros.map((l) => <li>{x(l)}</li>)}</ul>
+    <p class="stack">{experiencia.tecnologias.join(' · ')}</p>
+  </section>
+
+  <section>
+    <h2>{x(ui.proyectos.titulo)}</h2>
+    {
+      proyectos.map((p) => (
+        <div class="proyecto">
+          <div class="fila">
+            <strong>{p.nombre}</strong> · {x(p.descripcion)}
+            <span class="fecha">{x(p.contexto)}</span>
+          </div>
+          <p class="stack">{p.stack.slice(0, 8).join(' · ')}</p>
+        </div>
+      ))
+    }
+  </section>
+
+  <section>
+    <h2>{x(ui.proyectos.enEquipo)}</h2>
+    {
+      equipo.map((e) => (
+        <div class="proyecto">
+          <div class="fila">
+            <strong>{x(e.nombre)}</strong> · {x(e.aporte)}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <div class="columnas">
+    <section>
+      <h2>{x(ui.experiencia.formacion)}</h2>
+      <div class="fila"><strong>{x(formacion.carrera)}</strong></div>
+      <p>{x(formacion.universidad)}</p>
+      <p class="tenue">{x(ui.experiencia.tesis)}: {x(formacion.tesis)}</p>
+      <h2 class="separado">{x(ui.sobreMi.idiomas)}</h2>
+      <p>{x(persona.idiomas)}</p>
+    </section>
+    <section>
+      <h2>{x(ui.stack.titulo)}</h2>
+      <dl>
+        {
+          tecnologias.map((g) => (
+            <div>
+              <dt>{x(g.nombre)}</dt>
+              <dd>{g.items.map(([, n]) => n).join(', ')}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
+
+  <section>
+    <h2>{x(ui.certificaciones.titulo)}</h2>
+    {
+      certificaciones.map((g) => (
+        <p>
+          <strong>{g.emisor}:</strong> {g.certificados.map((c) => `${c.nombre} (${anio(c.fecha)})`).join('; ')}
+        </p>
+      ))
+    }
+  </section>
+</main>
+
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  :global(html),
+  :global(body) {
+    background: #fff;
+  }
+  .hoja {
+    box-sizing: border-box;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 13mm 15mm;
+    font-size: 9.6pt;
+    line-height: 1.38;
+    color: #23272a;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12mm;
+    padding-bottom: 4mm;
+    border-bottom: 2px solid #5a2d6b;
+  }
+  h1 {
+    margin: 0;
+    font-size: 25pt;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .rol {
+    margin: 2mm 0 0;
+    font-size: 11.5pt;
+    color: #545a56;
+  }
+  .contacto {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    font-size: 9pt;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  section {
+    margin-top: 3.6mm;
+  }
+  h2 {
+    margin: 0 0 1.4mm;
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5a2d6b;
+  }
+  .separado {
+    margin-top: 3mm;
+  }
+  p {
+    margin: 0;
+  }
+  ul {
+    margin: 1mm 0 0;
+    padding-left: 4.5mm;
+    list-style: disc;
+  }
+  .fila strong {
+    white-space: nowrap;
+  }
+  .fila .fecha {
+    float: right;
+    margin-left: 3mm;
+    font-size: 8.6pt;
+    color: #6a706b;
+  }
+  .proyecto + .proyecto {
+    margin-top: 1.3mm;
+  }
+  .stack,
+  .tenue {
+    font-size: 8.6pt;
+    color: #6a706b;
+  }
+  .columnas {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 8mm;
+  }
+  dl {
+    margin: 0;
+  }
+  dl div {
+    display: grid;
+    grid-template-columns: 30mm 1fr;
+    gap: 2mm;
+  }
+  dt {
+    color: #6a706b;
+  }
+  dd {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Pie from '../components/Pie.astro';
+---
+
+<Base lang="es" titulo="404 · Kevin Carrasco" descripcion="Página no encontrada." alterna="/en/">
+  <main class="dk flex min-h-[85vh] items-center bg-grafito text-ceniza">
+    <div class="contenedor">
+      <p class="m-0 text-lg text-mortino-claro">GET {'{'}ruta{'}'} → 404 Not Found</p>
+      <h1 class="mt-3 mb-0 max-w-[16ch] text-[clamp(44px,6vw,76px)] leading-none font-medium tracking-[-0.035em]">Esta ruta no está en mi API.</h1>
+      <p class="mt-5 mb-0 max-w-[32em] text-xl text-ceniza-suave">Revisé los logs y no hay nada aquí. <span lang="en">This route isn't in my API either.</span></p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/" class="rounded-[10px] bg-mortino-claro px-6 py-3.5 text-lg font-medium text-mortino-tinta no-underline">Volver al inicio</a>
+        <a href="/en/" lang="en" class="rounded-[10px] border border-[#6A7175] px-6 py-[13px] text-lg no-underline">Back to home</a>
+      </div>
+    </div>
+  </main>
+  <Pie lang="es" />
+</Base>

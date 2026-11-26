@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+@import '@fontsource/familjen-grotesk/400.css';
+@import '@fontsource/familjen-grotesk/500.css';
+@import '@fontsource/familjen-grotesk/600.css';
+
+/* Ceniza nocturna: secciones grafito que alternan con blanco y gris ceniza, un solo acento (mortiño). */
+@theme {
+  --font-sans: 'Familjen Grotesk', system-ui, sans-serif;
+
+  --color-grafito: #2e3336;
+  --color-grafito-claro: #363c3f;
+  --color-linea-oscura: #474d51;
+  --color-borde-oscuro: #5a6165;
+  --color-ceniza: #e4e5e0;
+  --color-ceniza-suave: #b4b8b1;
+  --color-blanco: #ffffff;
+  --color-ceniza-claro: #f3f4f1;
+  --color-hueco: #e9eae5;
+  --color-linea-clara: #dadcd5;
+  --color-borde-boton: #bfc2ba;
+  --color-tinta: #23272a;
+  --color-tinta-2: #3b4043;
+  --color-gris: #545a56;
+  --color-gris-suave: #6a706b;
+  --color-mortino-claro: #c9a3d6;
+  --color-mortino-tinta: #2a1733;
+  --color-mortino: #5a2d6b;
+  --color-mortino-oscuro: #3b1c47;
+  --color-mortino-profundo: #4a2559;
+  --color-mortino-borde: #7d5a8b;
+  --color-mortino-texto: #e2d4e8;
+  --color-lila: #eee6f1;
+}
+
+/* En @layer base para que las utilidades de Tailwind siempre ganen. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background: var(--color-grafito);
+  }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--color-tinta);
+  }
+  a {
+    color: inherit;
+    text-underline-offset: 4px;
+  }
+  .lt a.enlace {
+    color: var(--color-mortino);
+  }
+  .lt a.enlace:hover {
+    color: var(--color-mortino-oscuro);
+  }
+  .dk a:hover {
+    color: #fff;
+  }
+  :where(a, button, input, textarea):focus-visible {
+    outline: 2px solid var(--color-mortino-claro);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .contenedor {
+    position: relative;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 17px;
+  }
+  .contenedor {
+    padding: 0 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

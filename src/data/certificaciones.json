@@ -1,0 +1,115 @@
+{
+  "perfilCredly": "https://www.credly.com/users/kevin-carrasco.83f4c3dd",
+  "grupos": [
+    {
+      "emisor": "IBM SkillsBuild",
+      "tema": "Ciberseguridad, 2026",
+      "cuenta": "Credly · carrascokevin756 (Google)",
+      "certificados": [
+        {
+          "nombre": "Cloud Security",
+          "fecha": "2026-09-25",
+          "url": "https://www.credly.com/badges/8719c2e0-47f1-42ca-b3c4-38fd28f1a425",
+          "imagen": "https://images.credly.com/images/8ea090d1-d6da-43f3-8ce2-940ab5345f22/image.png",
+          "habilidades": [
+            "Cloud Application Security",
+            "Cloud Infrastructure Security",
+            "Cloud Threats",
+            "Cloud Computing Deployment Models",
+            "Network Virtualization",
+            "System Virtualization"
+          ]
+        },
+        {
+          "nombre": "Governance, Risk, Compliance, and Data Privacy",
+          "fecha": "2026-09-23",
+          "url": "https://www.credly.com/badges/2ca69fc6-1358-440e-99b8-823fc1224e19",
+          "imagen": "https://images.credly.com/images/5d324f5d-18fa-43ee-8321-be88763c9e14/image.png",
+          "habilidades": [
+            "CIA Triad",
+            "Compliance",
+            "Data Privacy",
+            "Data Security",
+            "Data Encryption",
+            "Data Backup"
+          ]
+        },
+        {
+          "nombre": "Incident Response and Systems Forensics",
+          "fecha": "2026-09-25",
+          "url": "https://www.credly.com/badges/2b7a67f5-9794-48ce-be00-409012a7ec8b",
+          "imagen": "https://images.credly.com/images/7ff0d7c3-7a73-4eb2-b364-19c20a94eb47/image.png",
+          "habilidades": [
+            "Incident Response",
+            "Digital Forensics Process",
+            "Digital Forensics Tools",
+            "Chain Of Custody",
+            "Intrusion Analysis"
+          ]
+        },
+        {
+          "nombre": "Security Operations and Management",
+          "fecha": "2026-09-25",
+          "url": "https://www.credly.com/badges/bf2e5263-8477-4b84-a703-ec55eab6ce95",
+          "imagen": "https://images.credly.com/images/571003e2-ef76-460e-be64-60029c3c7cbc/image.png",
+          "habilidades": [
+            "Security Operations Center (SOC)",
+            "SOC Models",
+            "SOC Teams",
+            "Security Awareness Training"
+          ]
+        },
+        {
+          "nombre": "System and Network Security",
+          "fecha": "2026-09-25",
+          "url": "https://www.credly.com/badges/af471f82-5e61-48e9-942b-64f0d1db48da",
+          "imagen": "https://images.credly.com/images/82e061d5-ce91-403d-8078-f213fd03ac62/image.png",
+          "habilidades": [
+            "Network Security Architecture",
+            "Network Access Control",
+            "Network Security Devices",
+            "Authentication Methods",
+            "Firmware Security",
+            "Network Security Threats"
+          ]
+        },
+        {
+          "nombre": "Vulnerability Management",
+          "fecha": "2026-09-25",
+          "url": "https://www.credly.com/badges/c0edad1b-0520-4f0e-bbf7-c5ad3fa54166",
+          "imagen": "https://images.credly.com/images/2fdda845-70ac-493d-9f37-533773d63be0/image.png",
+          "habilidades": [
+            "Penetration Testing Process",
+            "Cybersecurity Threat Analysis",
+            "Malware",
+            "Social Engineering",
+            "Antivirus Software",
+            "Physical Threats"
+          ]
+        }
+      ]
+    },
+    {
+      "emisor": "Cisco Networking Academy",
+      "tema": "Programación y ciberseguridad",
+      "cuenta": "NetAcad · jostero32 (pendiente de iniciar sesión)",
+      "certificados": [
+        {
+          "nombre": "Introduction to Cybersecurity",
+          "fecha": "2024-06-15",
+          "url": null
+        },
+        {
+          "nombre": "CPA: Programming Essentials in C++",
+          "fecha": "2022-06-14",
+          "url": null
+        },
+        {
+          "nombre": "PCAP: Programming Essentials in Python",
+          "fecha": "2022-06-13",
+          "url": null
+        }
+      ]
+    }
+  ]
+}

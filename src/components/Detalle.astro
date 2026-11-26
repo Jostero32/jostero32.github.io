@@ -1,0 +1,177 @@
+---
+import Captura from './Captura.astro';
+import Icono from './Icono.astro';
+import Pie from './Pie.astro';
+import { tr, rutaInicio, rutaProyecto, type Lang } from '../lib/i18n';
+import { ui } from '../data/perfil';
+import { proyectos, type Proyecto } from '../data/proyectos';
+
+interface Props {
+  lang: Lang;
+  p: Proyecto;
+}
+const { lang, p } = Astro.props;
+const x = (t: Parameters<typeof tr>[0]) => tr(t, lang);
+const d = ui.detalle;
+const siguiente = proyectos[(proyectos.findIndex((q) => q.slug === p.slug) + 1) % proyectos.length];
+const otroIdioma = rutaProyecto(p.slug, lang === 'es' ? 'en' : 'es');
+const titulo2 = 'm-0 text-[clamp(34px,4vw,40px)] font-medium tracking-[-0.02em]';
+---
+
+<div>
+  <!-- Hero -->
+  <div class="dk bg-grafito text-ceniza">
+    <div class="contenedor">
+      <header class="flex flex-wrap items-center justify-between gap-4 border-b border-linea-oscura py-[22px]">
+        <a href={rutaInicio(lang)} class="inline-flex items-center gap-2 text-[17px] no-underline">
+          <Icono nombre="atras" size={18} />
+          {x(d.volver)}
+        </a>
+        <div class="flex items-center gap-5">
+          <a href={otroIdioma} lang={lang === 'es' ? 'en' : 'es'} aria-label={x(ui.nav.otroIdiomaNombre)} class="rounded-md border border-borde-oscuro px-3 py-0.5 text-[17px] text-ceniza-suave no-underline">{x(ui.nav.otroIdioma)}</a>
+          <a href={rutaInicio(lang)} class="text-[21px] font-semibold no-underline">Kevin Carrasco</a>
+        </div>
+      </header>
+      <section class="flex flex-wrap items-center gap-12 py-14">
+        <div class="min-w-0 flex-[1_1_440px]">
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full bg-mortino-claro px-3 py-1 text-[15px] text-mortino-tinta">{x(p.estado)}</span>
+            <span class="rounded-full border border-borde-oscuro px-3 py-1 text-[15px] text-ceniza-suave">{x(p.contexto)}</span>
+          </div>
+          <h1 class="mt-5 mb-0 text-[clamp(48px,6vw,72px)] leading-none font-medium tracking-[-0.035em]">{p.nombre}</h1>
+          <p class="mt-5 mb-0 max-w-[30em] text-[clamp(19px,2vw,22px)] text-ceniza-suave">{x(p.descripcion)}</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href={p.codigo} class="rounded-[10px] bg-mortino-claro px-6 py-3.5 text-lg font-medium text-mortino-tinta no-underline hover:!text-mortino-tinta hover:brightness-105">{x(d.verCodigo)}</a>
+            {p.demo && <a href={p.demo} class="rounded-[10px] border border-[#6A7175] px-6 py-[13px] text-lg no-underline">{x(d.verDemo)}</a>}
+          </div>
+        </div>
+        <div class="min-w-0 flex-[1_1_520px] overflow-hidden rounded-3xl bg-linea-oscura">
+          <Captura src={p.imagen} alt={lang === 'es' ? `Captura de ${p.nombre}` : `${p.nombre} screenshot`} carga="eager" sizes="(max-width: 1100px) 100vw, 630px" class="aspect-[16/10] w-full object-cover object-top" estilo={p.encuadre ? `object-position:${p.encuadre}` : undefined} />
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Problema y En corto -->
+  <section class="lt bg-ceniza-claro py-16">
+    <div class="contenedor">
+      <div class="flex flex-wrap gap-6">
+        <div class="min-w-0 flex-[2_1_480px] rounded-[20px] border border-linea-clara bg-blanco p-8 max-sm:p-5">
+          <h2 class="mt-0 mb-3 text-[30px] font-medium">{x(d.problema)}</h2>
+          <p class="m-0 text-[clamp(18px,1.8vw,20px)] text-tinta-2">{x(p.problema)}</p>
+        </div>
+        <div class="min-w-0 flex-[1_1_300px] rounded-[20px] border border-linea-clara bg-blanco p-7 max-sm:p-5">
+          <h2 class="mt-0 mb-3 text-[21px] font-medium">{x(d.enCorto)}</h2>
+          <dl class="m-0">
+            {
+              p.enCorto.map((f) => (
+                <div class="flex justify-between gap-4 border-t border-linea-clara py-2.5 text-[17px]">
+                  <dt class="text-gris-suave">{x(f.k)}</dt>
+                  <dd class="m-0 text-right font-medium">{x(f.v)}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+
+      <h2 class={`${titulo2} mt-16 mb-6`}>{x(d.queHace)}</h2>
+      <ul class="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] gap-4 p-0">
+        {
+          p.funciones.map((f) => (
+            <li class="flex items-start gap-3 rounded-2xl border border-linea-clara bg-blanco p-5 text-[17px]">
+              <span class="flex size-[30px] flex-none items-center justify-center rounded-full bg-lila text-mortino">
+                <Icono nombre="check" size={16} grosor={2} />
+              </span>
+              {x(f)}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Arquitectura -->
+  <section class="dk bg-grafito py-16 text-ceniza">
+    <div class="contenedor">
+      <h2 class={`${titulo2} mb-7`}>{x(d.arquitectura)}</h2>
+      <ol class="m-0 flex list-none flex-wrap items-stretch gap-y-3 p-0 max-lg:flex-col">
+        {
+          p.arquitectura.map((a, i) => (
+            <li class="flex min-w-0 flex-1 items-center gap-2 max-lg:flex-col max-lg:items-stretch">
+              <div class="h-full flex-1 rounded-2xl border border-linea-oscura bg-grafito-claro p-5">
+                <div class="text-[21px] font-medium">{x(a.titulo)}</div>
+                <div class="mt-1 text-base text-ceniza-suave">{x(a.texto)}</div>
+              </div>
+              {i < p.arquitectura.length - 1 && (
+                <span class="flex-none px-2 text-[#8E948D] max-lg:rotate-90 max-lg:self-center">
+                  <Icono nombre="flecha" size={22} />
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+      <p class="mt-6 mb-0 text-[17px] text-ceniza-suave">{x(p.notaArquitectura)}</p>
+    </div>
+  </section>
+
+  <!-- Decisiones, stack y capturas -->
+  <section class="lt bg-ceniza-claro py-16">
+    <div class="contenedor">
+      <h2 class={`${titulo2} mb-6`}>{x(d.decisiones)}</h2>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] gap-4">
+        {
+          p.decisiones.map((de) => (
+            <article class="rounded-[20px] border border-linea-clara bg-blanco p-6">
+              <div class="flex size-11 items-center justify-center rounded-xl bg-lila text-mortino">
+                <Icono nombre="foco" size={22} />
+              </div>
+              <h3 class="mt-5 mb-2 text-[22px] leading-snug font-medium">{x(de.titulo)}</h3>
+              <p class="m-0 text-[17px] text-tinta-2">{x(de.texto)}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="mt-16 flex flex-wrap gap-12">
+        <div class="min-w-0 flex-[1_1_420px]">
+          <h2 class="mt-0 mb-4 text-[28px] font-medium">{x(d.stack)}</h2>
+          <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+            {p.stack.map((s) => <li class="rounded-full border border-linea-clara bg-blanco px-3.5 py-1.5 text-base">{s}</li>)}
+          </ul>
+        </div>
+        {
+          p.capturas.length > 0 && (
+            <div class="min-w-0 flex-[1_1_420px]">
+              <h2 class="mt-0 mb-4 text-[28px] font-medium">{x(d.capturas)}</h2>
+              <div class="grid grid-cols-3 gap-2.5 max-sm:grid-cols-1">
+                {p.capturas.map((c, i) => (
+                  <a href={c} class="block overflow-hidden rounded-xl bg-hueco" aria-label={`${x(d.capturas)} ${i + 1}`}>
+                    <Captura src={c} alt="" sizes="(max-width: 640px) 100vw, 200px" class="aspect-[4/3] w-full object-cover object-top transition-transform duration-300 hover:scale-105" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Siguiente proyecto -->
+  <section class="bg-mortino-profundo py-14 text-[#F3EEF5]">
+    <div class="contenedor flex flex-wrap items-center justify-between gap-8">
+      <div>
+        <div class="text-base text-mortino-texto">{x(d.siguiente)}</div>
+        <div class="mt-1 text-[clamp(30px,3.5vw,36px)] font-medium tracking-[-0.02em]">{siguiente.nombre}</div>
+        <p class="mt-1 mb-0 text-lg text-mortino-texto">{x(siguiente.descripcion)}</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href={rutaProyecto(siguiente.slug, lang)} class="rounded-[10px] bg-lila px-5 py-3 text-lg font-medium text-mortino-profundo no-underline hover:bg-white">{x(d.ver)} {siguiente.nombre}</a>
+        <a href={`${rutaInicio(lang)}#contacto`} class="rounded-[10px] border border-mortino-texto px-5 py-3 text-lg no-underline hover:bg-white/5">{x(d.contactarme)}</a>
+      </div>
+    </div>
+  </section>
+  <Pie lang={lang} />
+</div>

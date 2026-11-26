@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import Detalle from '../../components/Detalle.astro';
+import { proyectos } from '../../data/proyectos';
+import { rutaProyecto } from '../../lib/i18n';
+
+export function getStaticPaths() {
+  return proyectos.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+---
+
+<Base lang="es" titulo={`${p.nombre}, proyecto de Kevin Carrasco`} descripcion={p.descripcion.es} alterna={rutaProyecto(p.slug, 'en')} imagen={p.imagen}>
+  <Detalle lang="es" p={p} />
+</Base>

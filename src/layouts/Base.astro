@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  titulo: string;
+  descripcion: string;
+  alterna: string; // misma página en el otro idioma
+  imagen?: string;
+}
+const { lang, titulo, descripcion, alterna, imagen } = Astro.props;
+const canonica = new URL(Astro.url.pathname, Astro.site);
+const otra = new URL(alterna, Astro.site);
+const og = imagen ?? new URL('/og.png', Astro.site).toString();
+const persona = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Kevin Carrasco',
+  jobTitle: lang === 'es' ? 'Desarrollador full stack' : 'Full stack developer',
+  address: { '@type': 'PostalAddress', addressLocality: 'Ambato', addressCountry: 'EC' },
+  url: Astro.site?.toString(),
+  sameAs: ['https://github.com/Jostero32', 'https://www.linkedin.com/in/kevin-carrasco-360b8b451'],
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <meta name="theme-color" content="#2E3336" />
+    <link rel="canonical" href={canonica} />
+    <link rel="alternate" hreflang={lang} href={canonica} />
+    <link rel="alternate" hreflang={lang === 'es' ? 'en' : 'es'} href={otra} />
+    <link rel="alternate" hreflang="x-default" href={lang === 'es' ? canonica : otra} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:image" content={og} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_EC' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(persona)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

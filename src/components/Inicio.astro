@@ -1,0 +1,362 @@
+---
+import { Image } from 'astro:assets';
+import Captura from './Captura.astro';
+import Icono from './Icono.astro';
+import Contacto from './Contacto.astro';
+import Pie from './Pie.astro';
+import { tr, fecha, rutaProyecto, rutaCv, type Lang } from '../lib/i18n';
+import { persona, ui } from '../data/perfil';
+import { proyectos } from '../data/proyectos';
+import { equipo, experiencia, formacion, tecnologias, certificaciones, perfilCredly, totalCertificaciones, hardware } from '../data/secciones';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const x = (t: Parameters<typeof tr>[0]) => tr(t, lang);
+
+// La foto es opcional: basta con agregar src/assets/foto.(jpg|png|webp).
+const fotos = import.meta.glob<{ default: ImageMetadata }>('../assets/foto.{jpg,jpeg,png,webp}', { eager: true });
+const foto = Object.values(fotos)[0]?.default;
+const otroIdioma = lang === 'es' ? '/en/' : '/';
+const contadores = [
+  [proyectos.length, ui.hero.destacados],
+  [equipo.length, ui.hero.enEquipo],
+  [totalCertificaciones, ui.hero.certificaciones],
+] as const;
+---
+
+<div>
+  <!-- 1 y 2 · Encabezado y hero -->
+  <div class="dk relative overflow-hidden bg-grafito text-ceniza">
+    <svg aria-hidden="true" width="100%" height="100%" class="pointer-events-none absolute inset-0">
+      <defs>
+        <pattern id="puntos" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#3F4649"></circle></pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#puntos)"></rect>
+    </svg>
+    <div class="contenedor">
+      <header class="flex flex-wrap items-center justify-between gap-4 border-b border-linea-oscura py-[22px]">
+        <a href="#inicio" class="text-[21px] font-semibold no-underline">Kevin Carrasco</a>
+        <nav aria-label={lang === 'es' ? 'Secciones' : 'Sections'} class="flex flex-wrap items-center gap-x-[26px] gap-y-2 text-[17px] text-ceniza-suave">
+          <a href="#sobre-mi" class="no-underline">{x(ui.nav.sobreMi)}</a>
+          <a href="#proyectos" class="no-underline">{x(ui.nav.proyectos)}</a>
+          <a href="#experiencia" class="no-underline">{x(ui.nav.experiencia)}</a>
+          <a href="#certificaciones" class="no-underline">{x(ui.nav.certificaciones)}</a>
+          <a href="#contacto" class="no-underline">{x(ui.nav.contacto)}</a>
+          <a href={otroIdioma} lang={lang === 'es' ? 'en' : 'es'} aria-label={x(ui.nav.otroIdiomaNombre)} class="rounded-md border border-borde-oscuro px-3 py-0.5 no-underline">{x(ui.nav.otroIdioma)}</a>
+        </nav>
+      </header>
+
+      <section id="inicio" class="flex flex-wrap items-center gap-12 pt-16 pb-[72px]">
+        <div class="min-w-0 flex-[999_1_560px]">
+          <h1 class="m-0 max-w-[14ch] text-[clamp(44px,6vw,82px)] leading-none font-medium tracking-[-0.035em]">{x(ui.hero.titular)}</h1>
+          <p class="mt-[26px] mb-0 max-w-[32em] text-[clamp(19px,2vw,23px)] text-ceniza-suave">{x(ui.hero.bajada)}</p>
+          <div class="mt-8 flex flex-wrap gap-3.5">
+            <a href="#proyectos" class="rounded-[10px] bg-mortino-claro px-[26px] py-[15px] text-lg font-medium text-mortino-tinta no-underline hover:!text-mortino-tinta hover:brightness-105">{x(ui.hero.verProyectos)}</a>
+            <a href={rutaCv(lang)} class="rounded-[10px] border border-[#6A7175] bg-grafito px-[26px] py-[14px] text-lg no-underline">{x(ui.hero.descargarCv)}</a>
+          </div>
+          <div class="mt-10 flex flex-wrap gap-3">
+            {
+              contadores.map(([n, texto]) => (
+                <div class="flex items-baseline gap-2.5 rounded-[14px] border border-linea-oscura bg-grafito-claro px-5 py-3.5">
+                  <span class="text-[30px] font-medium">{n}</span>
+                  <span class="text-base text-ceniza-suave">{x(texto)}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <div class:list={['relative max-w-[460px] flex-[1_1_360px]', { 'max-sm:hidden': !foto }]}>
+          {
+            foto ? (
+              <Image src={foto} alt="Kevin Carrasco" widths={[400, 700, 920]} sizes="460px" class="aspect-[4/5] w-full rounded-[28px] object-cover" loading="eager" />
+            ) : (
+              <div aria-hidden="true" class="flex aspect-[4/5] max-sm:hidden items-center justify-center rounded-[28px] bg-linea-oscura text-[120px] font-medium tracking-[-0.04em] text-[#5E6569]">
+                KC
+              </div>
+            )
+          }
+          <div class:list={['absolute bottom-7 -left-5 rounded-[14px] bg-ceniza px-[18px] py-3 text-base text-tinta max-sm:left-3', { 'max-sm:hidden': !foto }]}>
+            <div class="font-medium">Kevin Carrasco</div>
+            <div class="text-gris">{x(persona.ciudad)}</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 3 · Sobre mí -->
+  <section id="sobre-mi" class="lt bg-blanco py-[72px]">
+    <div class="contenedor flex flex-wrap gap-12">
+      <div class="min-w-0 flex-[1_1_480px]">
+        <h2 class="m-0 text-[clamp(36px,4vw,44px)] font-medium tracking-[-0.02em]">{x(ui.sobreMi.titulo)}</h2>
+        <p class="mt-4 mb-0 text-[clamp(19px,2vw,22px)] leading-normal">{x(ui.sobreMi.bio)}</p>
+        <p class="mt-3.5 mb-0 text-gris">{x(ui.sobreMi.bio2)}</p>
+        <div class="mt-[26px] grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3">
+          {
+            [
+              [ui.sobreMi.ubicacion, persona.ciudad],
+              [ui.sobreMi.idiomas, persona.idiomas],
+              [ui.sobreMi.enfoque, ui.sobreMi.fullStack],
+            ].map(([k, v]) => (
+              <div class="rounded-[14px] bg-ceniza-claro px-[18px] py-3.5">
+                <div class="text-[15px] text-gris-suave">{x(k)}</div>
+                <div class="font-medium">{x(v)}</div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      <div class="min-w-0 flex-[1_1_480px]">
+        <h3 class="mt-2 mb-4 text-[25px] font-medium">{x(ui.sobreMi.comoTrabajo)}</h3>
+        <ol class="m-0 grid list-none grid-cols-2 gap-3 p-0 max-sm:grid-cols-1">
+          {
+            ui.sobreMi.pasos.map((p, i) => (
+              <li class="rounded-2xl bg-ceniza-claro p-5">
+                <div class="flex items-center gap-2.5">
+                  <span class="inline-flex size-8 items-center justify-center rounded-full bg-lila text-[15px] font-semibold text-mortino-profundo">{i + 1}</span>
+                  <span class="text-[21px] font-medium">{x(p.titulo)}</span>
+                </div>
+                <div class="mt-2 text-[17px] text-gris">{x(p.texto)}</div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Proyectos y en equipo -->
+  <section id="proyectos" class="lt bg-ceniza-claro py-[72px]">
+    <div class="contenedor">
+      <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="m-0 text-[clamp(36px,4vw,44px)] font-medium tracking-[-0.02em]">{x(ui.proyectos.titulo)}</h2>
+          <p class="mt-1.5 mb-0 text-xl text-gris">{x(ui.proyectos.bajada)}</p>
+        </div>
+        <a href={persona.github} class="enlace text-[17px]">{x(ui.proyectos.verGithub)}</a>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(340px,100%),1fr))] gap-5">
+        {
+          proyectos.map((p, i) => (
+            <article class="flex flex-col rounded-[20px] border border-linea-clara bg-blanco p-3.5">
+              <a href={rutaProyecto(p.slug, lang)} tabindex="-1" aria-hidden="true" class="block overflow-hidden rounded-xl bg-hueco">
+                <Captura src={p.imagen} alt="" carga={i < 3 ? 'eager' : 'lazy'} sizes="(max-width: 768px) 100vw, 400px" class="aspect-[16/10] w-full object-cover object-top transition-transform duration-300 hover:scale-[1.02]" estilo={p.encuadre ? `object-position:${p.encuadre}` : undefined} />
+              </a>
+              <div class="flex flex-1 flex-col px-2 pt-4 pb-1.5">
+                <div class="flex flex-wrap items-center justify-between gap-2.5">
+                  <h3 class="m-0 text-[27px] font-medium tracking-[-0.01em]">{p.nombre}</h3>
+                  <span class="rounded-full bg-lila px-2.5 py-[3px] text-sm text-mortino-profundo">{x(p.estado)}</span>
+                </div>
+                <p class="mt-1.5 mb-0 text-lg text-tinta-2">{x(p.resumen)}</p>
+                <div class="mt-3.5 flex flex-wrap gap-1.5">
+                  {p.tarjeta.map((s) => (
+                    <span class="rounded-full border border-linea-clara px-2.5 py-[3px] text-sm">{s}</span>
+                  ))}
+                </div>
+                <div class="mt-auto flex gap-2.5 pt-[18px] text-base">
+                  <a href={rutaProyecto(p.slug, lang)} class="rounded-[10px] bg-tinta px-4 py-2.5 text-ceniza-claro no-underline hover:!text-white">
+                    {x(ui.proyectos.verProyecto)}
+                    <span class="sr-only">: {p.nombre}</span>
+                  </a>
+                  <a href={p.codigo} class="rounded-[10px] border border-borde-boton px-4 py-[9px] text-tinta no-underline hover:bg-ceniza-claro">
+                    {x(ui.proyectos.codigo)}
+                    <span class="sr-only">: {p.nombre}</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="mt-[72px] mb-5 flex flex-wrap items-end justify-between gap-4">
+        <h3 class="m-0 text-[32px] font-medium tracking-[-0.01em]">{x(ui.proyectos.enEquipo)}</h3>
+        <p class="m-0 text-lg text-gris">{x(ui.proyectos.enEquipoBajada)}</p>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(340px,100%),1fr))] gap-5">
+        {
+          equipo.map((e) => (
+            <article class="flex flex-col rounded-[20px] border border-linea-clara bg-blanco p-7 max-sm:p-5">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex size-[52px] flex-none items-center justify-center rounded-[14px] bg-lila text-mortino-profundo">
+                  <Icono nombre="equipo" />
+                </div>
+                <span class="rounded-full bg-tinta px-3 py-1 text-[15px] text-ceniza-claro">
+                  {e.pr.total ? `${e.pr.tuyos} ${x(ui.proyectos.de)} ${e.pr.total} ${x(ui.proyectos.pr)}` : `${e.pr.tuyos} ${x(ui.proyectos.pr)}`}
+                </span>
+              </div>
+              <h4 class="mt-[18px] mb-0 text-[25px] font-medium">{x(e.nombre)}</h4>
+              <p class="mt-1.5 mb-0 text-lg text-tinta-2">{x(e.descripcion)}</p>
+              <div class="mt-4 rounded-xl bg-ceniza-claro px-4 py-3.5">
+                <div class="text-[15px] font-medium text-mortino-profundo">{x(ui.proyectos.miAporte)}</div>
+                <div class="text-[17px] text-tinta-2">{x(e.aporte)}</div>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                {e.etiquetas.map((s) => (
+                  <span class="rounded-full border border-linea-clara px-2.5 py-[3px] text-sm">{x(s)}</span>
+                ))}
+              </div>
+              <div class="mt-auto flex flex-wrap gap-[18px] pt-[18px] text-base">
+                {e.enlaces.map((l) => (
+                  <a href={l.url} class="enlace">
+                    {l.texto}
+                    <span class="sr-only">: {x(e.nombre)}</span>
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Experiencia y formación -->
+  <section id="experiencia" class="dk bg-grafito py-[72px] text-ceniza">
+    <div class="contenedor grid grid-cols-[repeat(auto-fit,minmax(min(460px,100%),1fr))] gap-5">
+      <div class="flex flex-col">
+        <h2 class="mt-0 mb-5 text-[clamp(34px,4vw,40px)] font-medium tracking-[-0.02em]">{x(ui.experiencia.titulo)}</h2>
+        <article class="flex-1 rounded-[20px] border border-linea-oscura bg-grafito-claro p-7 max-sm:p-5">
+          <div class="flex items-center gap-4">
+            <div class="flex size-[58px] flex-none items-center justify-center rounded-[14px] bg-ceniza text-[15px] font-semibold text-grafito">{experiencia.sigla}</div>
+            <div>
+              <h3 class="m-0 text-[25px] leading-tight font-medium">{x(experiencia.cargo)}</h3>
+              <p class="m-0 text-[17px] text-ceniza-suave">{x(experiencia.lugar)}</p>
+            </div>
+          </div>
+          {experiencia.periodo && <span class="mt-4 inline-block rounded-full border border-borde-oscuro px-3 py-[3px] text-[15px] text-ceniza-suave">{x(experiencia.periodo)}</span>}
+          <ul class="mt-[18px] mb-0 flex list-disc flex-col gap-2 pl-[22px] text-lg">
+            {experiencia.logros.map((l) => <li>{x(l)}</li>)}
+          </ul>
+          <div class="mt-5 flex flex-wrap gap-2">
+            {experiencia.tecnologias.map((s) => <span class="rounded-full bg-linea-oscura px-3 py-1 text-[15px]">{s}</span>)}
+          </div>
+        </article>
+      </div>
+      <div class="flex flex-col">
+        <h2 class="mt-0 mb-5 text-[clamp(34px,4vw,40px)] font-medium tracking-[-0.02em]">{x(ui.experiencia.formacion)}</h2>
+        <article class="flex-1 rounded-[20px] border border-linea-oscura bg-grafito-claro p-7 max-sm:p-5">
+          <div class="flex items-center gap-4">
+            <div class="flex size-[58px] flex-none items-center justify-center rounded-[14px] bg-mortino-claro text-mortino-profundo">
+              <Icono nombre="birrete" size={26} grosor={1.7} />
+            </div>
+            <div>
+              <h3 class="m-0 text-[25px] leading-tight font-medium">{x(formacion.carrera)}</h3>
+              <p class="m-0 text-[17px] text-ceniza-suave">{x(formacion.universidad)}</p>
+            </div>
+          </div>
+          <div class="mt-[22px] rounded-[14px] bg-grafito px-5 py-[18px]">
+            <div class="text-[15px] font-medium text-mortino-claro">{x(ui.experiencia.tesis)}</div>
+            <div class="mt-0.5 text-[19px]">{x(formacion.tesis)}</div>
+          </div>
+          <p class="mt-5 mb-0 text-[17px] text-ceniza-suave">
+            {
+              lang === 'es'
+                ? `Además de la carrera, completé ${totalCertificaciones} certificaciones en ciberseguridad y programación con IBM SkillsBuild y Cisco Networking Academy.`
+                : `Beyond my degree, I completed ${totalCertificaciones} certifications in cybersecurity and programming with IBM SkillsBuild and Cisco Networking Academy.`
+            }
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Con qué trabajo -->
+  <section class="lt bg-blanco py-[72px]">
+    <div class="contenedor">
+      <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <h2 id="stack" class="m-0 text-[clamp(36px,4vw,44px)] font-medium tracking-[-0.02em]">{x(ui.stack.titulo)}</h2>
+        <p class="m-0 max-w-[30em] text-lg text-gris">{x(ui.stack.bajada)}</p>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(360px,100%),1fr))] gap-x-6 gap-y-7">
+        {
+          tecnologias.map((g) => (
+            <div>
+              <h3 class="mt-0 mb-2.5 text-[19px] font-medium text-gris">{x(g.nombre)}</h3>
+              <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2 p-0">
+                {g.items.map(([sigla, nombre]) => (
+                  <li class="flex min-h-[84px] flex-col justify-between rounded-xl px-3 py-2.5" style={`background:${g.fondo};color:${g.texto}`}>
+                    <span aria-hidden="true" class="text-[26px] leading-none font-semibold">{sigla}</span>
+                    <span class="text-sm leading-tight">{nombre}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Certificaciones -->
+  <section id="certificaciones" class="lt bg-ceniza-claro py-[72px]">
+    <div class="contenedor">
+      <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <h2 class="m-0 text-[clamp(36px,4vw,44px)] font-medium tracking-[-0.02em]">{x(ui.certificaciones.titulo)}</h2>
+        <a href={perfilCredly} class="enlace text-[17px]">{x(ui.certificaciones.verCredenciales)}</a>
+      </div>
+      {
+        certificaciones.map((g) => (
+          <div class="mb-7">
+            <div class="mb-3 flex flex-wrap items-baseline gap-x-3">
+              <h3 class="m-0 text-[22px] font-medium">{g.emisor}</h3>
+              <span class="text-base text-gris-suave">{x(g.tema)}</span>
+            </div>
+            <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(min(260px,100%),1fr))] gap-3 p-0">
+              {g.certificados.map((c) => {
+                const interior = (
+                  <>
+                    {c.imagen ? (
+                      <Captura src={c.imagen} alt="" sizes="48px" anchos={[48, 96, 144]} class="size-12 flex-none object-contain" />
+                    ) : (
+                      <div class="flex size-10 flex-none items-center justify-center rounded-[10px] text-tinta" style={`background:${g.colorIcono}`}>
+                        <Icono nombre="insignia" size={20} />
+                      </div>
+                    )}
+                    <div>
+                      <div class="text-lg leading-snug font-medium">{c.nombre}</div>
+                      <div class="mt-1 text-[15px] text-gris-suave">
+                        {c.nota ? `${x(c.nota)}, ${fecha(c.fecha, lang)}` : `${x(ui.certificaciones.emitido)} ${fecha(c.fecha, lang)}`}
+                      </div>
+                    </div>
+                  </>
+                );
+                const clase = 'flex h-full items-start gap-3.5 rounded-2xl border border-linea-clara bg-blanco px-5 py-[18px]';
+                return <li>{c.url ? <a href={c.url} class={`${clase} no-underline transition-colors hover:border-mortino-claro`}>{interior}</a> : <div class={clase}>{interior}</div>}</li>;
+              })}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 8 · También hardware -->
+  <section class="dk bg-grafito py-[72px] text-ceniza">
+    <div class="contenedor">
+      <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <h2 id="hw" class="m-0 text-[clamp(34px,4vw,40px)] font-medium tracking-[-0.02em]">{x(ui.hardware.titulo)}</h2>
+        <p class="m-0 max-w-[28em] text-lg text-ceniza-suave">{x(ui.hardware.bajada)}</p>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(min(340px,100%),1fr))] gap-4">
+        {
+          hardware.map((h) => (
+            <a href={h.url} class="flex items-center gap-3.5 rounded-2xl border border-linea-oscura bg-grafito-claro p-3 no-underline transition-colors hover:border-borde-oscuro">
+              <Captura src={h.imagen} alt="" sizes="116px" anchos={[232, 348]} class="aspect-[4/3] w-[116px] flex-none rounded-[10px] bg-grafito object-cover object-top" />
+              <div>
+                <div class="text-[19px] font-medium">{x(h.nombre)}</div>
+                <div class="text-[15px] text-ceniza-suave">{x(h.texto)}</div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 y 10 · Contacto y pie -->
+  <Contacto lang={lang} />
+  <Pie lang={lang} />
+</div>
