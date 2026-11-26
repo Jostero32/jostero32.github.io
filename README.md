@@ -31,5 +31,5 @@ node scripts/og.mjs  # regenera la imagen para compartir (public/og.png)
 
 ## Pendientes
 
-- [ ] **Credenciales de Cisco**: URL de cada insignia en `src/data/certificaciones.json`.
+- [ ] **C++ y Python (Cisco)**: solo tienen certificado PDF; no hay enlace público.
 - [ ] **Demos**: agregar `demo` en `src/data/proyectos.ts` cuando un proyecto esté en línea.
