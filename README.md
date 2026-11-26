@@ -31,10 +31,5 @@ node scripts/og.mjs  # regenera la imagen para compartir (public/og.png)
 
 ## Pendientes
 
-- [ ] **Foto**: agregar `src/assets/foto.jpg` (o `.png`/`.webp`). Mientras no exista se muestran las iniciales.
-- [ ] **Fechas de la práctica en EEASA**: `experiencia.periodo` en `src/data/secciones.ts`.
-- [ ] **Nivel de inglés**: `persona.idiomas` en `src/data/perfil.ts`.
 - [ ] **Credenciales de Cisco**: URL de cada insignia en `src/data/certificaciones.json`.
-- [ ] **Formulario**: crear un formulario en un servicio (Formspree, Web3Forms…) y guardar su URL en la variable
-      del repositorio `PUBLIC_FORM_ENDPOINT`. Sin ella, el formulario abre el correo con el mensaje listo.
 - [ ] **Demos**: agregar `demo` en `src/data/proyectos.ts` cuando un proyecto esté en línea.

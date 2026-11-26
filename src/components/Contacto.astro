@@ -108,7 +108,7 @@ const campo = 'rounded-[10px] border border-borde-boton bg-ceniza-claro px-3.5 p
       const boton = form.querySelector('button')!;
       boton.disabled = true;
       try {
-        const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(datos) });
+        const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ ...datos, email: datos.correo, _subject: `Portafolio: mensaje de ${datos.nombre}` }) });
         if (!r.ok) throw new Error(String(r.status));
         form.reset();
         estado.textContent = m.enviado;

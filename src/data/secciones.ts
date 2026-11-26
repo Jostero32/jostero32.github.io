@@ -41,8 +41,7 @@ export const experiencia = {
   cargo: t('Pasante de desarrollo de software', 'Software development intern'),
   lugar: t('Departamento TIC, EEASA', 'IT Department, EEASA'),
   sigla: 'EEASA',
-  // Pendiente: fechas de inicio y fin (por ejemplo "abr 2026 a jul 2026"). Sin valor no se muestra.
-  periodo: null as Txt | null,
+  periodo: t('Ene 2026 – Jul 2026', 'Jan 2026 – Jul 2026') as Txt | null,
   logros: [
     t('Desarrollé módulos de SISGERH para horas extra, atrasos y cumplimiento documental.', 'Built SISGERH modules for overtime, lateness and document compliance.'),
     t('Integré relojes biométricos ZKTeco y Hikvision con el sistema de talento humano.', 'Integrated ZKTeco and Hikvision biometric clocks with the HR system.'),

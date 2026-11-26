@@ -9,10 +9,9 @@ export const persona = {
   linkedinCorto: 'kevin-carrasco',
   github: 'https://github.com/Jostero32',
   githubCorto: 'Jostero32',
-  // Pendientes: se completan cuando Kevin los confirme.
-  idiomas: { es: 'Español nativo', en: 'Native Spanish' } as Txt,
-  // Servicio de formularios (Formspree, Web3Forms…). Sin él, el formulario abre el correo con el mensaje listo.
-  formulario: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
+  idiomas: { es: 'Español nativo · Inglés B1', en: 'Spanish (native) · English B1' } as Txt,
+  // Formspree. Se puede reemplazar con la variable PUBLIC_FORM_ENDPOINT.
+  formulario: (import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined) || 'https://formspree.io/f/xdegjlbg',
 };
 
 export const ui = {
