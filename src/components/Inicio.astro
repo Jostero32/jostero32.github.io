@@ -18,6 +18,10 @@ const x = (t: Parameters<typeof tr>[0]) => tr(t, lang);
 // La foto es opcional: basta con agregar src/assets/foto.(jpg|png|webp).
 const fotos = import.meta.glob<{ default: ImageMetadata }>('../assets/foto.{jpg,jpeg,png,webp}', { eager: true });
 const foto = Object.values(fotos)[0]?.default;
+// Logos de tecnologías (Devicon, MIT; MinIO de Simple Icons, CC0).
+const logos = Object.fromEntries(
+  Object.entries(import.meta.glob<{ default: ImageMetadata }>('../assets/logos/*.svg', { eager: true })).map(([ruta, m]) => [ruta.split('/').pop()!.replace('.svg', ''), m.default]),
+);
 const otroIdioma = lang === 'es' ? '/en/' : '/';
 const contadores = [
   [proyectos.length, ui.hero.destacados],
@@ -276,9 +280,13 @@ const contadores = [
             <div>
               <h3 class="mt-0 mb-2.5 text-[19px] font-medium text-gris">{x(g.nombre)}</h3>
               <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2 p-0">
-                {g.items.map(([sigla, nombre]) => (
-                  <li class="flex min-h-[84px] flex-col justify-between rounded-xl px-3 py-2.5" style={`background:${g.fondo};color:${g.texto}`}>
-                    <span aria-hidden="true" class="text-[26px] leading-none font-semibold">{sigla}</span>
+                {g.items.map(([sigla, nombre, logo]) => (
+                  <li class="flex min-h-[84px] flex-col justify-between gap-2 rounded-xl px-3 py-2.5" style={`background:${g.fondo};color:${g.texto}`}>
+                    {logo && logos[logo] ? (
+                      <img src={logos[logo].src} alt="" height="30" loading="lazy" decoding="async" class="h-[30px] w-auto max-w-full self-start object-contain" />
+                    ) : (
+                      <span aria-hidden="true" class="text-[26px] leading-none font-semibold">{sigla}</span>
+                    )}
                     <span class="text-sm leading-tight">{nombre}</span>
                   </li>
                 ))}

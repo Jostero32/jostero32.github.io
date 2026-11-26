@@ -56,14 +56,15 @@ export const formacion = {
   tesis: t('Tutor de inglés con inteligencia artificial y evaluación automática de la pronunciación.', 'AI English tutor with automatic pronunciation assessment.'),
 };
 
-type Grupo = { nombre: Txt; fondo: string; texto: string; items: [string, string][] };
+// Cada tecnología: [sigla de respaldo, nombre, logo en src/assets/logos/<logo>.svg].
+type Grupo = { nombre: Txt; fondo: string; texto: string; items: [string, string, string?][] };
 export const tecnologias: Grupo[] = [
-  { nombre: t('Lenguajes', 'Languages'), fondo: '#EEE6F1', texto: '#4A2559', items: [['Ts', 'TypeScript'], ['Js', 'JavaScript'], ['Ja', 'Java'], ['C#', 'C#'], ['Py', 'Python'], ['C++', 'C++']] },
-  { nombre: t('Frontend', 'Frontend'), fondo: '#E6ECDD', texto: '#3C4A2A', items: [['Re', 'React'], ['An', 'Angular'], ['Nx', 'Next.js'], ['Vi', 'Vite'], ['Tw', 'Tailwind']] },
-  { nombre: t('Backend', 'Backend'), fondo: '#E3E8EE', texto: '#233446', items: [['Sb', 'Spring Boot'], ['Ex', 'Express'], ['Fa', 'Fastify'], ['Nt', 'ASP.NET Core'], ['Fl', 'Flask']] },
-  { nombre: t('Bases de datos', 'Databases'), fondo: '#F2EAD9', texto: '#5A4319', items: [['Pg', 'PostgreSQL'], ['Mg', 'MongoDB'], ['Ss', 'SQL Server'], ['Rd', 'Redis'], ['Sl', 'SQLite']] },
-  { nombre: t('DevOps', 'DevOps'), fondo: '#E9EAE5', texto: '#33373A', items: [['Dk', 'Docker'], ['Ng', 'nginx'], ['Dp', 'Dokploy'], ['Lx', 'Linux'], ['Gt', 'Git']] },
-  { nombre: t('Tiempo real y seguridad', 'Real time and security'), fondo: '#F0E3E6', texto: '#5B2533', items: [['Ws', 'WebSocket'], ['St', 'STOMP'], ['Gr', 'gRPC'], ['Jw', 'JWT'], ['Mn', 'MinIO']] },
+  { nombre: t('Lenguajes', 'Languages'), fondo: '#EEE6F1', texto: '#4A2559', items: [['Ts', 'TypeScript', 'typescript'], ['Js', 'JavaScript', 'javascript'], ['Ja', 'Java', 'java'], ['C#', 'C#', 'csharp'], ['Py', 'Python', 'python'], ['C++', 'C++', 'cplusplus']] },
+  { nombre: t('Frontend', 'Frontend'), fondo: '#E6ECDD', texto: '#3C4A2A', items: [['Re', 'React', 'react'], ['An', 'Angular', 'angular'], ['Nx', 'Next.js', 'nextjs'], ['Vi', 'Vite', 'vitejs'], ['Tw', 'Tailwind', 'tailwindcss']] },
+  { nombre: t('Backend', 'Backend'), fondo: '#E3E8EE', texto: '#233446', items: [['Sb', 'Spring Boot', 'spring'], ['Ex', 'Express', 'express'], ['Fa', 'Fastify', 'fastify'], ['Nt', 'ASP.NET Core', 'dotnetcore'], ['Fl', 'Flask', 'flask']] },
+  { nombre: t('Bases de datos', 'Databases'), fondo: '#F2EAD9', texto: '#5A4319', items: [['Pg', 'PostgreSQL', 'postgresql'], ['Mg', 'MongoDB', 'mongodb'], ['Ss', 'SQL Server', 'microsoftsqlserver'], ['Rd', 'Redis', 'redis'], ['Sl', 'SQLite', 'sqlite']] },
+  { nombre: t('DevOps', 'DevOps'), fondo: '#E9EAE5', texto: '#33373A', items: [['Dk', 'Docker', 'docker'], ['Ng', 'nginx', 'nginx'], ['Dp', 'Dokploy'], ['Lx', 'Linux', 'linux'], ['Gt', 'Git', 'git']] },
+  { nombre: t('Tiempo real y seguridad', 'Real time and security'), fondo: '#F0E3E6', texto: '#5B2533', items: [['Ws', 'WebSocket'], ['St', 'STOMP'], ['Gr', 'gRPC', 'grpc'], ['Jw', 'JWT', 'jwt'], ['Mn', 'MinIO', 'minio']] },
 ];
 
 export interface Certificado { nombre: string; fecha: string; url: string | null; imagen?: string | null; nota?: Txt }
